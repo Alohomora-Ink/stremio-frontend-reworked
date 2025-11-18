@@ -1,0 +1,44 @@
+{
+  "name": "stremio-frontend-reworkd",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "copy-wasm": "node scripts/copy-stremio-core-wasm.js",
+    "predev": "npm run copy-wasm",
+    "dev": "node dev.js",
+    "dev:raw": "next dev --experimental-https --webpack",
+    "start": "webpack serve --mode development --port 3000",
+    "start-prod": "webpack serve --mode production",
+    "build": "webpack --mode production",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
+    "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "preview": "next build && next start",
+    "typecheck": "tsc --noEmit",
+    "export": "npm run build"
+  },
+  "dependencies": {
+    "@stremio/stremio-core-web": "^0.50.0",
+    "@tanstack/react-query": "^5.90.10",
+    "eventemitter3": "^5.0.1",
+    "hat": "^0.0.3",
+    "next": "16.0.3",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19",
+    "esbuild": "^0.27.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.3",
+    "next-dev-https": "^0.13.3",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

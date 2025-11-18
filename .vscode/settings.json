@@ -1,0 +1,7 @@
+{
+  "cmake.configureOnOpen": false,
+  "cmake.buildBeforeRun": false,
+  "cmake.configureOnEdit": false,
+  "cmake.autoSelectActiveFolder": false,
+  "cmake.useCMakePresets": "never"
+}
