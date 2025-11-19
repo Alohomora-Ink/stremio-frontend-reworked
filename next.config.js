@@ -4,7 +4,7 @@ const nextConfig = {
   images: { unoptimized: true },
   typescript: { ignoreBuildErrors: true },
   devIndicators: false,
-
+  productionBrowserSourceMaps: true,
   webpack: (config, { isServer, dev }) => {
     config.experiments = {
       ...config.experiments,

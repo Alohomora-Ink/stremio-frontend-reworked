@@ -1,92 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { BoardCatalogStack } from "@/features/board/components/BoardCatalogStack";
-import {
-  AddonClient,
-  useAuth,
-  useLibrary,
-  type MetaItem,
-} from "@/stremio-core-ts-wrapper/src";
-
-const CINEMETA_URL = "https://v3-cinemeta.strem.io";
-
-interface BoardCatalog {
-  title: string;
-  items: MetaItem[];
-}
+import { useEffect } from "react";
+import { useBoard, useCtx, useLibrary } from "@/stremio-core-ts-wrapper/src";
+import { CatalogRow } from "@/features/board/components/CatalogRow";
 
 export default function BoardPage() {
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { items: libraryItems, isLoading: isLibraryLoading } = useLibrary();
-  const [catalogs, setCatalogs] = useState<BoardCatalog[]>([]);
-  const [isLoadingCatalogs, setIsLoadingCatalogs] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const { catalogs, isLoading: isBoardLoading, loadBoard } = useBoard();
+  const { isAuthenticated, addons, isLoading: isCtxLoading } = useCtx();
+  const { items: libraryItems } = useLibrary();
 
   useEffect(() => {
-    const fetchCatalogs = async () => {
-      setIsLoadingCatalogs(true);
-      setError(null);
+    if (addons.length === 0 && !isCtxLoading) {
+      console.warn("DEBUG: Ctx has no addons. PullAddons might have failed.");
+    } else if (addons.length > 0) {
+      console.log("DEBUG: Ctx has addons:", addons.length);
+    }
+  }, [addons, isCtxLoading]);
 
-      try {
-        const [moviesResponse, seriesResponse] = await Promise.all([
-          AddonClient.getCatalog(CINEMETA_URL, "movie", "top"),
-          AddonClient.getCatalog(CINEMETA_URL, "series", "top"),
-        ]);
+  useEffect(() => {
+    if (addons.length > 0 && catalogs.length === 0) {
+      console.log("Addons detected, refreshing board...");
+      loadBoard();
+    }
+  }, [addons.length, catalogs.length, loadBoard]);
 
-        const newCatalogs: BoardCatalog[] = [];
+  const isLoading = isBoardLoading || isCtxLoading;
 
-        if (moviesResponse.metas && moviesResponse.metas.length > 0) {
-          newCatalogs.push({
-            title: "Popular Movies",
-            items: moviesResponse.metas.slice(0, 12),
-          });
-        }
-
-        if (seriesResponse.metas && seriesResponse.metas.length > 0) {
-          newCatalogs.push({
-            title: "Popular Series",
-            items: seriesResponse.metas.slice(0, 12),
-          });
-        }
-
-        setCatalogs(newCatalogs);
-      } catch (err) {
-        console.error("Failed to load catalogs:", err);
-        setError(err instanceof Error ? err : new Error(String(err)));
-      } finally {
-        setIsLoadingCatalogs(false);
-      }
-    };
-
-    fetchCatalogs();
-  }, []);
-
-  if (isAuthLoading || isLibraryLoading || isLoadingCatalogs) {
+  if (isLoading && catalogs.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-xl text-zinc-400">Loading...</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+          <p className="text-zinc-400 font-medium">Loading Board...</p>
         </div>
       </div>
     );
   }
 
-  // Show error
-  if (error) {
+  if (catalogs.length === 0 && addons.length === 0 && !isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-red-500 mb-4">
-            Failed to Load Catalogs
-          </h1>
-          <p className="text-zinc-400 mb-4">{error.message}</p>
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-white mb-2">No Addons Found</h2>
+          <p className="text-zinc-400 mb-4">
+            We couldn't load standard addons.
+          </p>
+          {/* This button acts as a manual retry */}
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg transition-colors"
+            className="text-purple-400 hover:text-purple-300"
           >
-            Retry
+            Retry Connection
           </button>
         </div>
       </div>
@@ -94,48 +58,26 @@ export default function BoardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">Board</h1>
-        {isAuthenticated && (
-          <p className="text-zinc-400">
-            {libraryItems.length} items in your library
+    <div className="w-full animate-in fade-in duration-700">
+      <div className="mb-8 flex items-end justify-between px-4 md:pl-28 md:pr-12">
+        <div>
+          <h1 className="text-4xl font-bold text-white mb-2">Board</h1>
+          <p className="text-zinc-400 text-sm">
+            {isAuthenticated
+              ? `${libraryItems.length} items in Library`
+              : "Guest Mode"}
           </p>
-        )}
+        </div>
       </div>
 
-      {/* Continue Watching - only if authenticated and has library items */}
-      {isAuthenticated && libraryItems.length > 0 && (
-        <BoardCatalogStack
-          title="Continue Watching"
-          items={libraryItems
-            .filter((item) => !item.removed && item.state.timeWatched > 0)
-            .slice(0, 12)
-            .map((item) => ({
-              id: item._id,
-              type: item.type,
-              name: item.name,
-              poster: item.poster,
-            }))}
-        />
-      )}
-
-      {/* Popular catalogs */}
-      {catalogs.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-zinc-400 text-xl">No catalogs available</p>
-        </div>
-      ) : (
-        <>
-          {catalogs.map((catalog, index) => (
-            <BoardCatalogStack
-              key={index}
-              title={catalog.title}
-              items={catalog.items}
-            />
-          ))}
-        </>
-      )}
+      <div className="space-y-2">
+        {catalogs.map((catalog, index) => (
+          <CatalogRow
+            key={`${catalog.addon.manifest.id}-${catalog.type}-${catalog.id}-${index}`}
+            catalog={catalog}
+          />
+        ))}
+      </div>
     </div>
   );
 }

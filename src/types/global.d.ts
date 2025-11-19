@@ -20,6 +20,6 @@ declare global {
             onmessage: ((event: { data: any }) => void) | null;
         };
         InitializeWebviewCommunication?: () => void;
-        onCoreEvent?: (name: any, args: any) => void;
+        onCoreEvent?: (payload: { name: string; args: any }) => void;
     }
 }
