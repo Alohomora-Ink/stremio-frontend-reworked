@@ -9,7 +9,7 @@ const projectRoot = join(__dirname, "..");
 
 const workerEntry = join(
   projectRoot,
-  "node_modules/@stremio/stremio-core-web/worker.js",
+  "node_modules/@stremio/stremio-core-web/worker.js"
 );
 const outDir = join(projectRoot, "public");
 
@@ -23,18 +23,17 @@ build({
   entryPoints: [workerEntry],
   bundle: true,
   outfile: join(outDir, "worker.js"),
-  format: "iife", // Wraps code to run immediately in the browser
+  format: "iife",
   platform: "browser",
   loader: {
-    ".wasm": "file", // Copies WASM and replaces 'require' with the URL path
+    ".wasm": "file"
   },
   define: {
     "process.env.NODE_ENV": '"development"',
-    global: "self", // Polyfill 'global' for browser compatibility
+    global: "self"
   },
-  // Ensure assets are referenced from root
   publicPath: "/",
-  sourcemap: true,
+  sourcemap: true
 })
   .then(() => {
     console.log("✅ Worker bundled successfully to public/worker.js");

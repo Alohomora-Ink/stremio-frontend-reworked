@@ -20,7 +20,10 @@
     "export": "npm run build"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@stremio/stremio-core-web": "^0.50.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.90.10",
     "@tanstack/react-query-devtools": "^5.90.2",
     "clsx": "^2.1.1",
@@ -29,9 +32,12 @@
     "hat": "^0.0.3",
     "lucide-react": "^0.554.0",
     "next": "16.0.3",
+    "prettier-plugin-tailwindcss": "^0.7.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "tailwind-merge": "^3.4.0"
+    "react-json-tree": "^0.20.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -41,6 +47,7 @@
     "esbuild": "^0.27.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "eslint-config-prettier": "^10.1.8",
     "next-dev-https": "^0.13.3",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",

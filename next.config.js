@@ -5,36 +5,45 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: true },
   devIndicators: false,
   productionBrowserSourceMaps: true,
-  webpack: (config, { isServer, dev }) => {
+  async rewrites() {
+    return [
+      {
+        source: "/stremio-server/:path*",
+        destination: "http://127.0.0.1:11470/:path*"
+      }
+    ];
+  },
+
+  webpack: (config, { isServer }) => {
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
-      layers: true,
+      layers: true
     };
     config.output.webassemblyModuleFilename = isServer
       ? "../static/wasm/[modulehash].wasm"
       : "static/wasm/[modulehash].wasm";
     config.module.rules.push({
       test: /\.wasm$/,
-      type: "webassembly/async",
+      type: "webassembly/async"
     });
     if (!isServer) {
       config.module.rules.push({
         test: /stremio_core_web_bg\.wasm$/,
         type: "asset/resource",
         generator: {
-          filename: "static/wasm/[name][ext]",
-        },
+          filename: "static/wasm/[name][ext]"
+        }
       });
     }
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
       path: false,
-      crypto: false,
+      crypto: false
     };
     return config;
-  },
+  }
 };
 
 export default nextConfig;
