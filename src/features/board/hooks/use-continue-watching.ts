@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import { StateParser, useCtx, useDispatch, useStremioCore } from '@/stremio-core-ts-wrapper/src';
+import { StateParser, useDispatch, useStremioCore, useUserProfileCtx } from '@/stremio-core-ts-wrapper/src'; // CHANGED
 import { useCoreQuery } from '@/stremio-core-ts-wrapper/src/hooks/use-core-model';
 
 export function useContinueWatching(isEnabled: boolean) {
-    const { isAuthenticated } = useCtx();
+    // CHANGED: Use specific hook
+    const { isAuthenticated } = useUserProfileCtx();
+
     const { transport } = useStremioCore();
     const dispatch = useDispatch();
 
@@ -22,15 +24,9 @@ export function useContinueWatching(isEnabled: boolean) {
         if (hasDispatched) return;
         if (!transport) return;
 
-        const load = async () => {
-            try {
-                setHasDispatched(true);
-            } catch (e) {
-                console.error("Failed to load continue watching", e);
-            }
-        };
-
-        load();
+        // Just triggering state, actual logic likely handled by Core side effect or previous dispatch
+        // Keeping logic as is, just fixing dependencies
+        setHasDispatched(true);
     }, [isAuthenticated, isEnabled, hasDispatched, transport, dispatch]);
 
     return {

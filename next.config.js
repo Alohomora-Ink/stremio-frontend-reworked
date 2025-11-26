@@ -14,7 +14,14 @@ const nextConfig = {
     ];
   },
 
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
+    if (dev) {
+      config.ignoreWarnings = [
+        {
+          module: /node_modules\/next\/dist\/compiled\/react-server-dom-webpack/
+        }
+      ];
+    }
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,

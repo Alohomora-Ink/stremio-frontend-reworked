@@ -50,6 +50,7 @@
     "eslint-config-prettier": "^10.1.8",
     "next-dev-https": "^0.13.3",
     "prettier": "^3.6.2",
+    "react-devtools": "^7.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

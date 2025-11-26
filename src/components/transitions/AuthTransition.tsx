@@ -1,6 +1,6 @@
 "use client";
 
-import { LiquidGlassSplash } from "../primitives/glass/LiquidGlassSplash";
+import { Splash } from "@/components/ui/splash";
 import { Loader2, LogIn, LogOut } from "lucide-react";
 
 export type AuthTransitionType = "login" | "logout" | null;
@@ -13,17 +13,17 @@ export function AuthTransition({ type }: AuthTransitionProps) {
   const isLogin = type === "login";
 
   return (
-    <LiquidGlassSplash isVisible={!!type}>
+    <Splash isVisible={!!type}>
       <div className="flex flex-col items-center gap-6 p-8 text-center">
         {/* Icon Container */}
         <div className="relative flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-2xl backdrop-blur-xl">
           {isLogin ? (
-            <LogIn className="h-10 w-10 text-blue-400" />
+            <LogIn className="text-brand-primary h-10 w-10" />
           ) : (
             <LogOut className="h-10 w-10 pl-1 text-red-400" />
           )}
           {/* Orbiting Loader */}
-          <div className="absolute inset-0 animate-spin rounded-full border-t border-white/30 duration-1000" />
+          <div className="duration-normal absolute inset-0 animate-spin rounded-full border-t border-white/30" />
         </div>
 
         <div className="space-y-2">
@@ -39,11 +39,11 @@ export function AuthTransition({ type }: AuthTransitionProps) {
 
         <div className="flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5">
           <Loader2 className="h-3 w-3 animate-spin text-zinc-500" />
-          <span className="font-mono text-xs tracking-widest text-zinc-500 uppercase">
+          <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
             Reloading Application
           </span>
         </div>
       </div>
-    </LiquidGlassSplash>
+    </Splash>
   );
 }

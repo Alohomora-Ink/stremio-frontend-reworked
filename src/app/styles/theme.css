@@ -1,0 +1,34 @@
+@theme inline {
+  /* COLORS: Semantic naming allows themes to swap palettes easily */
+  --color-brand-primary: #2563eb; /* blue-600 */
+  --color-brand-secondary: #a855f7; /* purple-500 */
+  --color-brand-accent: #22c55e; /* green-500 */
+
+  /* GLASS SURFACE SYSTEM */
+  /* This allows us to control "glassiness" globally */
+  --glass-border-opacity: 0.1;
+  --glass-surface-opacity: 0.05;
+  --glass-blur: 20px;
+
+  --color-glass-border: rgba(255, 255, 255, var(--glass-border-opacity));
+  --color-glass-surface: rgba(255, 255, 255, var(--glass-surface-opacity));
+  --color-glass-highlight: rgba(255, 255, 255, 0.2);
+
+  /* POTATO PC / PERFORMANCE VARIABLES */
+  /* We use variables for time so we can set them to 0s via JS later */
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-shimmer: 1.5s;
+
+  /* LAYOUT */
+  --panel-width: 450px;
+  --sidebar-width-collapsed: 4rem;
+  --sidebar-width-expanded: 16rem;
+}
+
+/* Base "Liquid" Utility Class we can reuse */
+.glass-panel {
+  @apply border border-(--color-glass-border) bg-(--color-glass-surface) backdrop-blur-(--glass-blur);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}

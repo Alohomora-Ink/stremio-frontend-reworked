@@ -1,0 +1,56 @@
+@theme inline {
+  --color-brand-primary: #2563eb;
+  --animate-fade-in-up: fade-in-up var(--duration-slow) ease-out forwards;
+  --animate-shimmer: shimmer var(--duration-shimmer) infinite;
+  --animate-shine: shine 0.8s ease-in-out;
+  --animate-scroll: scroll 40s linear infinite;
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes shine {
+    0% {
+      transform: translateX(-150%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(150%) skewX(-12deg);
+    }
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* Reduced Motion Override (Potato PC Mode) */
+/* When we add the class 'reduce-motion' to body, everything stops */
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
